@@ -1,12 +1,6 @@
 package PasswordManager;
 
-import javax.crypto.*;
-import javax.crypto.spec.GCMParameterSpec;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 
 /**
@@ -17,8 +11,6 @@ public class User {
     private String username;
     private String password;
     private HashMap<String, Account> passwords;
-    private static final String ALGORITHM = "AES/GCM/NoPadding";
-    private static final int GCM_TAG_LENGTH = 128;
 
     public User(String username, String password) {
         this.username = username;
