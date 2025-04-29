@@ -38,10 +38,10 @@ public class SharedAccount extends Account {
 		}
 	}
 	
-	public int update(String newPassword, User currentUser) {
+	public Verified update(String newPassword, User currentUser) {
 		if (verifyUser(currentUser) != 1) {
-			return -1;
+			return Verified.ImproperUser;
 		}
-		super(newPassword);
+		super.update(newPassword);
 	}
 }
