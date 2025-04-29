@@ -24,7 +24,7 @@ public class PasswordVerifier {
 		
 		pv.maxLength(50);
 		pv.minLength(10);
-		pv.needSpecial();
+		pv.needSpecial(true);
 		
 		System.out.println(pv.verifyPassword(password));
 		//System.out.println();
@@ -32,9 +32,10 @@ public class PasswordVerifier {
 	
 	// TODO: Getters will be needed for all of these in the generator
 	// Also all methods need javadoc
+	// And I need a repOK
 	private Set<Predicate<String>> criteria;  // never null, never contains null
-	private int minchars; //never less then 1 or more then maxchars
-	private int maxchars; //never less then minchars
+	private int minChars; //never less then 1 or more then maxchars
+	private int maxChars; //never less then minchars
 	private Set<Character> allowedChars; // never null, contains no nulls
 	
 	// TODO: make "notNeeded" methods for all of these
@@ -45,8 +46,8 @@ public class PasswordVerifier {
 	
 	private static char[] specialChars = {
 			'{','}','[',']','`','~','!','@','#','$','%','^','&','*','(',')','_','-','|','\\','\'','\"','<','>',',','.','/','?','=','+'};
-	private static char[] lowercaseChars = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
-	private static char[] uppercaseChars = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+	private static char[] lowerCaseChars = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+	private static char[] upperCaseChars = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	private static char[] numChars = {'1','2','3','4','5','6','7','8','9','0'};
 	
 	/**
@@ -57,11 +58,11 @@ public class PasswordVerifier {
 	 */
 	public PasswordVerifier() {
 		criteria = new HashSet<Predicate<String>>();
-		minchars=1;
-		maxchars=50;
+		minChars=1;
+		maxChars=50;
 		this.allowedChars = new HashSet<Character>();
-		addAllowedCharacters(lowercaseChars);
-		addAllowedCharacters(uppercaseChars);
+		addAllowedCharacters(lowerCaseChars);
+		addAllowedCharacters(upperCaseChars);
 		addAllowedCharacters(specialChars);
 		addAllowedCharacters(numChars);
 		needCaps = false;
@@ -99,10 +100,10 @@ public class PasswordVerifier {
 	public boolean verifyPassword(String password) { //this is like a fifth of my code on this document
 		int len = password.length();
 		boolean hasNeededChars = true;
-		if (minchars >= len||maxchars <= len) return false;
+		if (minChars >= len||maxChars <= len) return false;
 		if (needLowercase) {
 			hasNeededChars = false;
-			for (char c : lowercaseChars) {
+			for (char c : lowerCaseChars) {
 				if (password.contains(c+"")) {
 					hasNeededChars = true;
 					break;
@@ -112,7 +113,7 @@ public class PasswordVerifier {
 		}
 		if (needCaps) {
 			hasNeededChars = false;
-			for (char c : uppercaseChars) {
+			for (char c : upperCaseChars) {
 				hasNeededChars = false;
 				if (password.contains(c+"")) {
 					hasNeededChars = true;
@@ -200,63 +201,65 @@ public class PasswordVerifier {
 	 * @param min
 	 */
 	public void minLength(int min) {
-		this.minchars = min;
+		this.minChars = min;
 	}
 	
 	/**
 	 * @param max
 	 */
 	public void maxLength(int max) {
-		this.maxchars = max;
+		this.maxChars = max;
+	}
+	
+	/**
+	 * @param need 
+	 */
+	public void needUpperCase(boolean need) {
+		this.needCaps=need;
 	}
 	
 	/**
 	 * 
 	 */
-	public void needUppercase() {
-		this.needCaps=true;
+	public void noUpperCase() {
+		removeAllowedCharacters(upperCaseChars);
+		this.needCaps=false;
 	}
 	
 	/**
 	 * 
 	 */
-	public void noUppercase() {
-		removeAllowedCharacters(uppercaseChars);
+	public void allowUpperCase() {
+		addAllowedCharacters(upperCaseChars);
+	}
+	
+	/**
+	 * @param need 
+	 */
+	public void needLowerCase(boolean need) {
+		this.needLowercase=need;
 	}
 	
 	/**
 	 * 
 	 */
-	public void allowUppercase() {
-		addAllowedCharacters(uppercaseChars);
+	public void noLowerCase() {
+		removeAllowedCharacters(lowerCaseChars);
+		this.needLowercase=false;
 	}
 	
 	/**
 	 * 
 	 */
-	public void needLowercase() {
-		this.needLowercase=true;
+	public void allowLowerCase() {
+		addAllowedCharacters(lowerCaseChars);
 	}
 	
 	/**
-	 * 
+	 * @param need 
 	 */
-	public void noLowercase() {
-		removeAllowedCharacters(lowercaseChars);
-	}
-	
-	/**
-	 * 
-	 */
-	public void allowLowercase() {
-		addAllowedCharacters(lowercaseChars);
-	}
-	
-	/**
-	 * 
-	 */
-	public void needNums() {
-		this.needNums=true;
+	public void needNums(boolean need) {
+		this.needNums=need;
 	}
 	
 	/**
@@ -264,6 +267,7 @@ public class PasswordVerifier {
 	 */
 	public void noNums() {
 		removeAllowedCharacters(numChars);
+		this.needNums=false;
 	}
 	
 	/**
@@ -274,10 +278,10 @@ public class PasswordVerifier {
 	}
 	
 	/**
-	 * 
+	 * @param need 
 	 */
-	public void needSpecial() {
-		this.needSpecial=true;
+	public void needSpecial(boolean need) {
+		this.needSpecial=need;
 	}
 	
 	/**
@@ -285,6 +289,7 @@ public class PasswordVerifier {
 	 */
 	public void noSpecial() {
 		removeAllowedCharacters(specialChars);
+		this.needSpecial=false;
 	}
 	
 	/**
