@@ -20,11 +20,11 @@ public class SharedAccount extends Account {
 		return admins.add(user);
 	}
 	
-	public boolean removeUser() {
+	public boolean removeUser(User user) {
 		return users.remove(user);
 	}
 	
-	public boolean removeAdmin() {
+	public boolean removeAdmin(User user) {
 		return admins.remove(user);
 	}
 	
