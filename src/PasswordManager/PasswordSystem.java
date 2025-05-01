@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 
 /**
+ * @Author Ashton Gabbeitt
  * The main system for the PasswordManager
  */
 public class PasswordSystem {
