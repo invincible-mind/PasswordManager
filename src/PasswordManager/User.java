@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
+ * @Author Ashton Gabbeitt
  * A User for the PasswordManager
  */
 public class User {
