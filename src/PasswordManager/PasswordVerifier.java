@@ -1,6 +1,5 @@
 package PasswordManager;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,6 +17,7 @@ import java.util.function.Predicate;
  * It implements a method that will check a string to test if it is valid
  */
 public class PasswordVerifier {
+	@SuppressWarnings("javadoc")
 	public static void main(String[] argm) {
 		String password = "HelloWorld";
 		PasswordVerifier pv = new PasswordVerifier();
@@ -31,18 +31,16 @@ public class PasswordVerifier {
 	}
 	
 	// TODO: Getters will be needed for all of these in the generator
-	// Also all methods need javadoc
 	// And I need a repOK
 	private Set<Predicate<String>> criteria;  // never null, never contains null
-	private int minChars; //never less then 1 or more then maxchars
+	private int minChars; //never less then 0 or more then maxchars
 	private int maxChars; //never less then minchars
 	private Set<Character> allowedChars; // never null, contains no nulls
 	
-	// TODO: make "notNeeded" methods for all of these
-	private boolean needCaps; 
-	private boolean needNums;
-	private boolean needSpecial;
-	private boolean needLowercase;
+	private boolean needCaps; //false if there are no upper case characters in the allowed characters set
+	private boolean needNums; //false if there are number characters in the allowed characters set
+	private boolean needSpecial; //false if there are no special characters in the allowed characters set
+	private boolean needLowercase; //false if there are no lower case characters in the allowed characters set
 	
 	private static char[] specialChars = {
 			'{','}','[',']','`','~','!','@','#','$','%','^','&','*','(',')','_','-','|','\\','\'','\"','<','>',',','.','/','?','=','+'};
@@ -75,7 +73,7 @@ public class PasswordVerifier {
 	 * This is for adding chars in an array to the allowed character set
 	 * @param chars the chars being added
 	 */
-	private void addAllowedCharacters(char[] chars) {
+	public void addAllowedCharacters(char[] chars) {
 		for (char c : chars) {
 			this.allowedChars.add(c);
 		}
@@ -85,7 +83,7 @@ public class PasswordVerifier {
 	 * This is for removing chars in an array from the allowed character set
 	 * @param chars the chars being removed
 	 */
-	private void removeAllowedCharacters(char[] chars) {
+	public void removeAllowedCharacters(char[] chars) {
 		for (char c : chars) {
 			this.allowedChars.remove(c);
 		}
@@ -97,7 +95,8 @@ public class PasswordVerifier {
 	 * @param password the password being verified
 	 * @return true if valid, otherwise false
 	 */
-	public boolean verifyPassword(String password) { //this is like a fifth of my code on this document
+	public boolean verifyPassword(String password) {
+		if (password == null) return false;
 		int len = password.length();
 		boolean hasNeededChars = true;
 		if (minChars >= len||maxChars <= len) return false;
@@ -154,8 +153,7 @@ public class PasswordVerifier {
 		return true;
 	}
 	
-	/** ##Thane, if oldPasswords doesn't match your signature, just tell me so I can change this one
-	 * Verifies the inputed String as password
+	/**
 	 * Uses the criteria defined by the object
 	 * Additionally prevents the password from being an old one
 	 * @param password the password being verified
@@ -163,6 +161,7 @@ public class PasswordVerifier {
 	 * @return true if valid, otherwise false
 	 */
 	public boolean verifyNewPassword(String password, Map<Date,String> oldPasswords) {
+		if (password == null) return false;
 		for (String p : oldPasswords.values()) {
 			if (password.equals(p)) {
 				return false;
@@ -177,13 +176,15 @@ public class PasswordVerifier {
 	 * @return "TODO"
 	 */
 	public String generatePassword() {
-		return "TODO";
+		return PasswordGenerator.generatePassword(this);
 	}
 	
 	/**
-	 * @param criteria
+	 * Adds a criteria that has no direct implementation 
+	 * Does not work with generate password
+	 * @param criteria the rule being added
 	 */
-	public void addCritiera(Predicate<String> criteria) {
+	public void addCriteria(Predicate<String> criteria) {
 		if (criteria == null) {
 			return;
 		}
@@ -191,35 +192,42 @@ public class PasswordVerifier {
 	}
 	
 	/**
-	 * @param criteria
+	 * Removes a criteria that was added through addCriteria
+	 * @param criteria the rule being removed
 	 */
-	public void removeCritiera(Predicate<String> criteria) {
+	public void removeCriteria(Predicate<String> criteria) {
 		this.criteria.remove(criteria);
 	}
 	
 	/**
+	 * Sets the maximum character limit
 	 * @param min
 	 */
 	public void minLength(int min) {
 		this.minChars = min;
+		repOK();
 	}
 	
 	/**
+	 * Sets the minimum character limit
 	 * @param max
 	 */
 	public void maxLength(int max) {
 		this.maxChars = max;
+		repOK();
 	}
 	
 	/**
-	 * @param need 
+	 * Sets the flag that at least 1 upper case letter is needed
+	 * @param need true if needed false if not
 	 */
 	public void needUpperCase(boolean need) {
 		this.needCaps=need;
 	}
 	
 	/**
-	 * 
+	 * Removes all upper case characters from the set of available characters
+	 * If an upper case character was needed, the requirement is removed
 	 */
 	public void noUpperCase() {
 		removeAllowedCharacters(upperCaseChars);
@@ -227,21 +235,23 @@ public class PasswordVerifier {
 	}
 	
 	/**
-	 * 
+	 * Adds all upper case characters to the available character set
 	 */
 	public void allowUpperCase() {
 		addAllowedCharacters(upperCaseChars);
 	}
 	
 	/**
-	 * @param need 
+	 * Sets the flag that at least 1 lower case letter is needed
+	 * @param need true if needed false if not
 	 */
 	public void needLowerCase(boolean need) {
 		this.needLowercase=need;
 	}
 	
 	/**
-	 * 
+	 * Removes all lower case characters from the set of available characters
+	 * If a lower case case character was needed, the requirement is removed
 	 */
 	public void noLowerCase() {
 		removeAllowedCharacters(lowerCaseChars);
@@ -249,21 +259,23 @@ public class PasswordVerifier {
 	}
 	
 	/**
-	 * 
+	 * Adds all lower case characters to the available character set
 	 */
 	public void allowLowerCase() {
 		addAllowedCharacters(lowerCaseChars);
 	}
 	
 	/**
-	 * @param need 
+	 * Sets the flag that at least 1 number character is needed
+	 * @param need true if needed false if not
 	 */
 	public void needNums(boolean need) {
 		this.needNums=need;
 	}
 	
 	/**
-	 * 
+	 * Removes all number characters from the set of available characters
+	 * If a number character was needed, the requirement is removed
 	 */
 	public void noNums() {
 		removeAllowedCharacters(numChars);
@@ -271,13 +283,15 @@ public class PasswordVerifier {
 	}
 	
 	/**
-	 * 
+	 * Adds all number characters to the available character set
 	 */
 	public void allowNums() {
 		addAllowedCharacters(numChars);
 	}
 	
 	/**
+	 * Sets the flag that at least 1 special character is needed
+	 * Special characters are: {}[]`~!@#$%^&*()_-|\'"<>,./?=+
 	 * @param need 
 	 */
 	public void needSpecial(boolean need) {
@@ -285,7 +299,9 @@ public class PasswordVerifier {
 	}
 	
 	/**
-	 * 
+	 * Removes all special characters from the set of available characters
+	 * If a special character was needed, the requirement is removed
+	 * Special characters are: {}[]`~!@#$%^&*()_-|\'"<>,./?=+
 	 */
 	public void noSpecial() {
 		removeAllowedCharacters(specialChars);
@@ -293,10 +309,80 @@ public class PasswordVerifier {
 	}
 	
 	/**
-	 * 
+	 * Adds all special characters to the available character set
+	 * Special characters are: {}[]`~!@#$%^&*()_-|\'"<>,./?=+
 	 */
 	public void allowSpecial() {
 		addAllowedCharacters(specialChars);
+	}
+	
+	/**
+	 * @return the maximum number of characters criteria
+	 */
+	public int maxCharacters() {
+		return this.maxChars;
+	}
+	
+	/**
+	 * @return the minimum number of characters criteria
+	 */
+	public int minCharacters() {
+		return this.minChars;
+	}
+	
+	/**
+	 * @return set of allowed characters in the password
+	 */
+	public Set<Character> allowedCharacters() {
+		return new HashSet<Character>(this.allowedCharacters());
+	}
+	
+	/**
+	 * @return set of extra criteria
+	 */
+	public Set<Predicate<String>> extraCriteria() {
+		return new HashSet<>(this.criteria);
+	}
+	
+	/**
+	 * @return if the password requires a least 1 upper case character
+	 */
+	public boolean doesNeedUpperCase() {
+		return this.needCaps;
+	}
+	
+	/**
+	 * @return if the password requires a least 1 lower case character
+	 */
+	public boolean doesNeedLowerCase() {
+		return this.needLowercase;
+	}
+	
+	/**
+	 * @return if the password requires a least 1 number character
+	 */
+	public boolean doesNeedNumbers() {
+		return this.needNums;
+	}
+	
+	/**
+	 * @return if the password requires a least 1 special character
+	 */
+	public boolean doesNeedSpecial() {
+		return this.needSpecial;
+	}
+	
+	private void repOK() {
+		assert(this.allowedChars != null);
+		for (Character c : this.allowedChars) {
+			assert(c != null);
+		}
+		assert(this.criteria != null);
+		for (Predicate<String> p : this.criteria) {
+			assert(p != null);
+		}
+		assert(this.minChars >= 0);
+		assert(this.maxChars >= minChars);
 	}
 	
 }
