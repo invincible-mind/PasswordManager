@@ -115,7 +115,7 @@ public class PasswordSystem {
                                 retrieved = user;
                             }
                         } catch (IllegalBlockSizeException | BadPaddingException e) {
-                            e.printStackTrace();
+                            throw new RuntimeException(e);
                         }
 
                     } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
@@ -123,7 +123,7 @@ public class PasswordSystem {
                     }
 
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         }
