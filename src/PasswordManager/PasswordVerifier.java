@@ -30,8 +30,6 @@ public class PasswordVerifier {
 		//System.out.println();
 	}
 	
-	// TODO: Getters will be needed for all of these in the generator
-	// And I need a repOK
 	private Set<Predicate<String>> criteria;  // never null, never contains null
 	private int minChars; //never less then 0 or more then maxchars
 	private int maxChars; //never less then minchars
@@ -173,7 +171,7 @@ public class PasswordVerifier {
 	/**
 	 * Generates a password based on the password verifier.
 	 * If it can not generate a valid password it will return NULL
-	 * @return "TODO"
+	 * @return the generated password, or null if it fails
 	 */
 	public String generatePassword() {
 		return PasswordGenerator.generatePassword(this);
