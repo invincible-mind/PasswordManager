@@ -1,4 +1,4 @@
-package passwordManager;
+package PasswordManager;
 import java.util.Set;
 
 /**

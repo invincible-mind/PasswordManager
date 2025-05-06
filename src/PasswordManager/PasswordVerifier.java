@@ -332,7 +332,7 @@ public class PasswordVerifier {
 	 * @return set of allowed characters in the password
 	 */
 	public Set<Character> allowedCharacters() {
-		return new HashSet<Character>(this.allowedCharacters());
+		return new HashSet<Character>(this.allowedChars);
 	}
 	
 	/**

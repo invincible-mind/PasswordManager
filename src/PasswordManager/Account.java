@@ -1,4 +1,4 @@
-package passwordManager;
+package PasswordManager;
 
 import java.util.Date;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class Account {
      * @return Verify.CORRECT if update was successful, Verify.INCORRECT if new password fails verification
      */
     public Verify update(String newPassword) {
-        if (passwordVerifier.verifyNewPassword(newPassword)) {
+        if (passwordVerifier.verifyNewPassword(newPassword, oldPasswords)) {
             return Verify.INCORRECT;
         }
         oldPasswords.put(dateCreated, password);

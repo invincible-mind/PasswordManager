@@ -5,7 +5,8 @@ import javax.crypto.spec.GCMParameterSpec;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Base64;
 
 /**
@@ -13,14 +14,14 @@ import java.util.Base64;
  * The main system for the PasswordManager
  */
 public class PasswordSystem {
-    private ArrayList<User> users;
-    private ArrayList<User> administrators;
+    private Set<User> users;
+    private Set<User> administrators;
     private static final String ALGORITHM = "AES/GCM/NoPadding";
     private static final int GCM_TAG_LENGTH = 128;
 
     public PasswordSystem() {
-        users = new ArrayList<>();
-        administrators = new ArrayList<>();
+        this.users = new HashSet<User>();
+        this.administrators = new HashSet<User>();
     }
 
     /**
@@ -53,7 +54,7 @@ public class PasswordSystem {
         }
 
     /**
-     * Adds a user to the system list of Users
+     * Adds a user to the system set of Users
      * @param user to be added
      */
     public void addUser(User user) {
@@ -66,29 +67,65 @@ public class PasswordSystem {
      * @param newUserInfo the user info to overwrite with
      */
     public void editUser(User existingUser, User newUserInfo) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).equals(existingUser)) {
-                users.set(i, newUserInfo);
+            if (users.contains(existingUser)) {
+                users.remove(existingUser);
+                users.add(newUserInfo);
             }
-        }
+
     }
 
     /**
-     * Gets the list of all system Users
-     * @return a list of all system Users
+     * Removes an existing user
+     * @param user the user to be removed
      */
-    public ArrayList<User> getUsers() {
+    public void removeUser(User user) {
+        users.remove(user);
+    }
+
+    /**
+     * Gets the set of all system Users
+     * @return a set of all system Users
+     */
+    public Set<User> getUsers() {
         return users;
     }
 
     /**
-     * Adds an administrator User to the list of system administrators
-     * @param user the user to be added to the list of system Administrators
+     * Adds an administrator User to the set of system administrators
+     * @param user the user to be added to the set of system Administrators
      */
     public void addAdministrator(User user) {
         administrators.add(user);
     }
 
+    /**
+     * Edits an administrator User
+     * @param admin the admin to be edited
+     * @param newAdminInfo the admin User info to overwrite with
+     */
+    public void editAdmin(User admin, User newAdminInfo) {
+        if (administrators.contains(admin)) {
+            administrators.remove(admin);
+            administrators.add(newAdminInfo);
+        }
+    }
+
+
+    /**
+     * Removes an administrator User
+     * @param admin the user to be removed
+     */
+    public void removeAdmin(User admin) {
+        users.remove(admin);
+    }
+
+    /**
+     * Gets the set of all system Administrators
+     * @return a set of all system Administrators
+     */
+    public Set<User> getAdmins() {
+        return administrators;
+    }
 
     /**
      * Verifies the username and password of a system User
