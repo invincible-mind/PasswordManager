@@ -110,7 +110,7 @@ public class PasswordGenerator {
 					allowedSpecial.add(c);
 				} 
 			}
-			indexs[2] = (int)(password.length()*Math.random());
+			indexs[3] = (int)(password.length()*Math.random());
 			if (indexs[3]==indexs[0]) {
 				indexs[3]++;
 			}
