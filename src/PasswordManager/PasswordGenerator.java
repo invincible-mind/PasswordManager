@@ -41,21 +41,17 @@ public class PasswordGenerator {
 		}
 		String password = "";
 		int maxSize = pv.maxCharacters();
-		//System.out.println("This is size: " + maxSize);
 		List<Character> allowed = new ArrayList<>(pv.allowedCharacters());
-		//System.out.println("This is worked");
 		int allowedSize = allowed.size();
-		//System.out.println("Size of set is: " + allowedSize);
 		for (int i = 0; i < maxSize; i++) {
 			int index = (int)(Math.random()*allowedSize);
-			//System.out.println(index);
 			password = password + allowed.get(index);
 		}
 		password = checkNeeded(password,pv);
-
 		if (pv.verifyPassword(password)) {
 			return password;
 		} else {
+			System.out.println("Here: " +password);
 			return null;
 		}
 	}
@@ -82,8 +78,8 @@ public class PasswordGenerator {
 				} 
 			}
 			indexs[1] = (int)(password.length()*Math.random());
-			if (indexs[1]==indexs[0]) {
-				indexs[1]++;
+			while (indexs[1]==indexs[0]) {
+				indexs[1] = (int)(password.length()*Math.random());
 			}
 			sb.setCharAt(indexs[1],allowedUpper.get((int)(allowedUpper.size()*Math.random())));
 		}
@@ -95,11 +91,8 @@ public class PasswordGenerator {
 				} 
 			}
 			indexs[2] = (int)(password.length()*Math.random());
-			if (indexs[2]==indexs[0]) {
-				indexs[2]++;
-			}
-			if (indexs[2]==indexs[1]) {
-				indexs[2]++;
+			while (indexs[2]==indexs[0]||indexs[2]==indexs[1]) {
+				indexs[2] = (int)(password.length()*Math.random());
 			}
 			sb.setCharAt(indexs[2],allowedNums.get((int)(allowedNums.size()*Math.random())));
 		}
@@ -111,14 +104,8 @@ public class PasswordGenerator {
 				} 
 			}
 			indexs[3] = (int)(password.length()*Math.random());
-			if (indexs[3]==indexs[0]) {
-				indexs[3]++;
-			}
-			if (indexs[3]==indexs[1]) {
-				indexs[3]++;
-			}
-			if (indexs[3]==indexs[2]) {
-				indexs[3]++;
+			while (indexs[3]==indexs[0]||indexs[2]==indexs[1]||indexs[3]==indexs[2]) {
+				indexs[3] = (int)(password.length()*Math.random());
 			}
 			sb.setCharAt(indexs[3],allowedSpecial.get((int)(allowedSpecial.size()*Math.random())));
 		}
