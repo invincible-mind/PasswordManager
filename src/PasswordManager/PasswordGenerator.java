@@ -52,10 +52,10 @@ public class PasswordGenerator {
 			password = password + allowed.get(index);
 		}
 		password = checkNeeded(password,pv);
+
 		if (pv.verifyPassword(password)) {
 			return password;
 		} else {
-			System.out.println("Here: " +password);
 			return null;
 		}
 	}

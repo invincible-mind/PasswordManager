@@ -97,7 +97,11 @@ public class PasswordVerifier {
 		if (password == null) return false;
 		int len = password.length();
 		boolean hasNeededChars = true;
-		if (minChars >= len||maxChars <= len) return false;
+		if (minChars > len||maxChars < len){
+			System.out.println(minChars + " " + maxChars + " " + len);
+			System.out.println("pw issue");
+			return false;
+		}
 		if (needLowercase) {
 			hasNeededChars = false;
 			for (char c : lowerCaseChars) {
@@ -133,7 +137,7 @@ public class PasswordVerifier {
 			hasNeededChars = false;
 			for (char c : specialChars) {
 				if (password.contains(c+"")) {
-					System.out.println("This is special: " + c);
+					//System.out.println("This is special: " + c);
 					hasNeededChars = true;
 					break;
 				}

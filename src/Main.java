@@ -38,19 +38,19 @@ public class Main {
         pv.needSpecial(true);
         pv.needNums(true);
 
-        Account ac1 = new Account("BuddyHolly123", sys.encryptPwd(PasswordGenerator.generatePassword(pv), secretKey, iv), pv);
-        u1.addAccount("Netflix", ac1);
+            Account ac1 = new Account("BuddyHolly123", sys.encryptPwd(PasswordGenerator.generatePassword(pv), secretKey, iv), pv);
+            u1.addAccount("Netflix", ac1);
 
-        String pw = "LuckyDuck!2";
+            String pw = "LuckyDuck!2";
 
-        if (pv.verifyPassword(pw)){
-            SharedAccount sc1 = new SharedAccount("SirDudeALot", sys.encryptPwd(pw, secretKey, iv), pv, sys.getAdmins(), sys.getUsers());
+            if (pv.verifyPassword(pw)){
+                SharedAccount sc1 = new SharedAccount("SirDudeALot", sys.encryptPwd(pw, secretKey, iv), pv, sys.getAdmins(), sys.getUsers());
+            }
+
+
+            User verified = sys.verifyUser("BuddyHolly", "FrenchFry", secretKey, iv);
+
+            System.out.println(verified.getUsername());
+
         }
-
-
-        User verified = sys.verifyUser("BuddyHolly", "FrenchFry", secretKey, iv);
-
-        System.out.println(verified.getUsername());
-
-    }
 }
